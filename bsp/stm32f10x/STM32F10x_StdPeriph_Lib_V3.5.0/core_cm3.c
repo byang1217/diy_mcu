@@ -720,6 +720,7 @@ uint32_t __LDREXW(uint32_t *addr)
    return(result);
 }
 
+#if 0 //disable for new gcc build issue
 /**
  * @brief  STR Exclusive (8 bit)
  *
@@ -753,6 +754,7 @@ uint32_t __STREXH(uint16_t value, uint16_t *addr)
    __ASM volatile ("strexh %0, %2, [%1]" : "=r" (result) : "r" (addr), "r" (value) );
    return(result);
 }
+#endif
 
 /**
  * @brief  STR Exclusive (32 bit)
