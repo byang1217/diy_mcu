@@ -4,4 +4,5 @@ BSP = stm32f10x
 SOC = stm32f10x_md
 BOARD = stm32_min_dev
 
-SOURCES += $(CURDIR)/main.c
+SOURCES += $(CURDIR)/main.c \
+	   $(CURDIR)/i2c.c

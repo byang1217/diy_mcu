@@ -4,6 +4,8 @@
 #define SHELL_UART_ID 1
 #define SHELL_UART_SPEED 9600
 
+int shell_soft_i2c_scan(int argc, char **argv);
+
 static int shell_test(int argc, char **argv)
 {
 	int i;
@@ -49,6 +51,11 @@ static const struct shell_cmd app_cmds[] = {
 		.cmd_str = "led",
 		.help_str = "led toggle\n",
 		.fn = shell_onboard_led_toggle,
+	},
+	{
+		.cmd_str = "soft_i2c_scan",
+		.help_str = "soft i2c scan\n",
+		.fn = shell_soft_i2c_scan,
 	},
 	{
 		.cmd_str = "test",
