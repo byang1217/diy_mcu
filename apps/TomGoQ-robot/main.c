@@ -13,6 +13,25 @@ static int shell_test(int argc, char **argv)
 	return 0;
 }
 
+static void onboard_led(int on)
+{
+	static int init;
+
+	if (!init) {
+		bsp_gpio_direction(PB_12, 0);
+		init = 1;
+	}
+	bsp_gpio_set(PB_12, !on);
+}
+static int shell_onboard_led_toggle(int argc, char **argv)
+{
+	static char on;
+	on = !on;
+	onboard_led(on);
+	pr_log("led: %s\n", on ? "on" : "off");
+	return 0;
+}
+
 static int shell_putc(int c)
 {
 	bsp_uart_putc(SHELL_UART_ID, (char)c);
@@ -26,9 +45,14 @@ static int shell_getc(void)
 
 static const struct shell_cmd app_cmds[] = {
 	{
-		.cmd_str = "test_1",
-		.help_str =	"test 001\n"
-				"	it is test 001\n"
+		.cmd_str = "led",
+		.help_str = "led toggle\n",
+		.fn = shell_onboard_led_toggle,
+	},
+	{
+		.cmd_str = "test",
+		.help_str =	"test\n"
+				"	shell test\n"
 				"	by Yang, Bin\n",
 		.fn = shell_test,
 	},
@@ -40,17 +64,6 @@ struct shell default_shell = {
 	.cmds = app_cmds,
 	.cmd_num = sizeof(app_cmds)/sizeof(app_cmds[0]),
 };
-
-void onboard_led(int on)
-{
-	static int init;
-
-	if (!init) {
-		bsp_gpio_direction(PB_12, 0);
-		init = 1;
-	}
-	bsp_gpio_set(PB_12, !on);
-}
 
 void main(void)
 {
