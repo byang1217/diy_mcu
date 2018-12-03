@@ -55,7 +55,7 @@ $(OUT)/$(TARGET).bin: $(OUT)/$(TARGET).elf
 	$(Q)$(OBJCOPY) -O binary $< $@
 	$(Q)$(SIZE) $<
 
-$(OUT)/$(TARGET).elf: $(OBJS) $(OUT)/ld.script
+$(OUT)/$(TARGET).elf: $(OUT)/version.h $(OBJS) $(OUT)/ld.script
 	$(Q)echo create $@
 	$(Q)$(CC) -o $@ $(OBJS) $(LDFLAGS)
 	$(Q)$(OBJDUMP) -SD $@ > $(OUT)/$(TARGET).lst

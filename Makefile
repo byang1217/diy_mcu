@@ -69,6 +69,18 @@ tags:
 	find apps common bsp/$(BSP) -name "*.[cSsh]" -o -name "*.cpp" -o -name "*.inc" > cscope.files
 	cscope -kbq
 
+CFLAGS += -I$(OUT)
+$(OUT)/version.h: FORCE
+	$(Q)echo -n "gen $@ ... "
+	$(Q)mkdir -p $(OUT)
+	$(Q)echo -n > $@
+	TIMESTAMP=`date +'%D %T'` ;\
+	dirt=`git diff-index --name-only HEAD` ;\
+	version=`git rev-parse --verify --short HEAD` ;\
+	if [ -z "$$dirt" ]; then verstr=$$version; else verstr=$$version-dirty; fi ;\
+	echo $(APP) git-$$verstr $$TIMESTAMP ;\
+	echo \#define VERSION_STRING \"$(APP) git-$$verstr $$TIMESTAMP\" >> $@
+
 -include $(patsubst %.o,%.dep,$(filter %.o, $(OBJS)))
 
 PHONY += help
@@ -135,3 +147,6 @@ $(OUT)/ld.script: $(LD_SCRIPT) $(gdeps)
 PHONY += clean
 clean:
 	rm -rf $(OUT)
+
+PHONY += FORCE
+FORCE:

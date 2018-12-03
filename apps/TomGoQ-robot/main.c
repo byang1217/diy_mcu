@@ -1,4 +1,5 @@
 #include "common.h"
+#include "version.h"
 
 #define SHELL_UART_ID 1
 #define SHELL_UART_SPEED 9600
@@ -69,6 +70,8 @@ void main(void)
 {
 	bsp_init();
 	bsp_uart_init(SHELL_UART_ID, SHELL_UART_SPEED);
-	for (;;)
+	pr_log("\n%s\n", VERSION_STRING);
+	for (;;) {
 		shell_kick(&default_shell);
+	}
 }
