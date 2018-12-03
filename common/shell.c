@@ -108,6 +108,13 @@ void shell_kick(struct shell *sh)
 	//sh->line will be destroyed
 	argc = string_to_argv(sh->line, argv);
 	if (argc > 0) {
+		if (strcmp(argv[0], "help") == 0) {
+			for (i = 0; i < sh->cmd_num; i ++) {
+				shell_print(sh, "%s\n", sh->cmds[i].cmd_str);
+				shell_print(sh, "\t%s\n", sh->cmds[i].help_str);
+			}
+			goto exit;
+		}
 		for (i = 0; i < sh->cmd_num; i ++) {
 			if (strcmp(argv[0], sh->cmds[i].cmd_str) == 0) {
 				cmd = &sh->cmds[i];
@@ -156,22 +163,17 @@ static int shell_test(int argc, char **argv)
 static const struct shell_cmd test_cmds[] = {
 	{
 		.cmd_str = "q",
-		.help_str =	"q\n"
-				"	exit shell\n",
+		.help_str = "exit shell",
 		.fn = shell_test,
 	},
 	{
 		.cmd_str = "test_1",
-		.help_str =	"test 001\n"
-				"	it is test 001\n"
-				"	by Yang, Bin\n",
+		.help_str = "test 001",
 		.fn = shell_test,
 	},
 	{
 		.cmd_str = "test_2",
-		.help_str =	"test 002\n"
-				"	it is test 002\n"
-				"	by Yang, Bin\n",
+		.help_str = "test 002",
 		.fn = shell_test,
 	},
 };

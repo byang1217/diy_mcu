@@ -49,19 +49,17 @@ static int shell_getc(void)
 static const struct shell_cmd app_cmds[] = {
 	{
 		.cmd_str = "led",
-		.help_str = "led toggle\n",
+		.help_str = "led toggle",
 		.fn = shell_onboard_led_toggle,
 	},
 	{
 		.cmd_str = "soft_i2c_scan",
-		.help_str = "soft i2c scan\n",
+		.help_str = "soft i2c scan",
 		.fn = shell_soft_i2c_scan,
 	},
 	{
 		.cmd_str = "test",
-		.help_str =	"test\n"
-				"	shell test\n"
-				"	by Yang, Bin\n",
+		.help_str = "test",
 		.fn = shell_test,
 	},
 };
