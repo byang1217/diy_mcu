@@ -65,6 +65,10 @@ all:
 install:
 debug:
 
+tags:
+	find apps common bsp/$(BSP) -name "*.[cSsh]" -o -name "*.cpp" -o -name "*.inc" > cscope.files
+	cscope -kbq
+
 -include $(patsubst %.o,%.dep,$(filter %.o, $(OBJS)))
 
 PHONY += help
