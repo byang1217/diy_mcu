@@ -16,6 +16,20 @@
 
 #include "shell.h"
 
+void shell_print(struct shell *sh, const char *fmt, ...)
+{
+	va_list args;
+	int i;
+	char tmp[SHELL_MAX_STR_SIZE];
+
+	va_start(args, fmt);
+	vsnprintf(tmp, sizeof(tmp), fmt, args);
+	va_end(args);
+
+	for (i = 0; tmp[i] != 0 && i < sizeof(tmp); i++)
+		sh->shell_putc(tmp[i]);
+}
+
 static int string_to_argv(char *str, char **argv)
 {
 	int argc = 0;
@@ -95,34 +109,30 @@ void shell_kick(struct shell *sh)
 	argc = string_to_argv(sh->line, argv);
 	if (argc > 0) {
 		for (i = 0; i < sh->cmd_num; i ++) {
-			int len1 = strlen(argv[0]);
-			int len2 = strlen(sh->cmds[i].cmd_str);
-
-			pr_log("len1: %d, len2: %d\n", len1, len2);
 			if (strcmp(argv[0], sh->cmds[i].cmd_str) == 0) {
 				cmd = &sh->cmds[i];
 				break;
 			}
 		}
 		if (cmd == NULL) {
-			sh->shell_putc('1'); sh->shell_putc('\n');
-			pr_err("Error: Invalid command");
+			shell_print(sh, "Error: Invalid command\n");
 			goto exit;
 		}
 
-		if (cmd->fn(argc, argv) == 0) {
-			sh->shell_putc('0'); sh->shell_putc('\n');
-		} else {
-			sh->shell_putc('2'); sh->shell_putc('\n');
-			pr_err("Error: command failed");
+		if (cmd->fn(argc, argv) != 0) {
+			shell_print(sh, "Error: command failed\n");
+			goto exit;
 		}
-	}else {
-		sh->shell_putc('3'); sh->shell_putc('\n');
+	}
+
+	if (argc < 0) {
+		shell_print(sh, "Error: Invalid command\n");
 	}
 
 exit:
 	memset(sh->line, 0, sizeof(sh->line));
 	sh->line_end = 0;
+	shell_print(sh, SHELL_PROMPT_STR);
 }
 
 #ifdef __SHELL_TEST

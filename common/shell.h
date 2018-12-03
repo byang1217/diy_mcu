@@ -25,5 +25,6 @@ struct shell {
 
 extern struct shell default_shell;
 void shell_kick(struct shell *sh);
+void shell_print(struct shell *sh, const char *fmt, ...);
 
 #endif /* __SHELL_H__ */
