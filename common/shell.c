@@ -6,13 +6,10 @@
 #include <termios.h>
 #include <assert.h>
 
-#define pr_err printf
-#define pr_dbg printf
-#define pr_log printf
 #define assert_param assert
-#else
-#include "common.h"
 #endif
+
+#include "common.h"
 
 #include "shell.h"
 

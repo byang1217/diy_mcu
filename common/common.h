@@ -6,10 +6,13 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include "bsp.h"
 #include "shell.h"
+
+#ifndef __SHELL_TEST
+#include "bsp.h"
 #include "soft_i2c.h"
 #include "soft_uart.h"
+#endif
 
 #define pr_err pr_log
 #define pr_dbg pr_log
