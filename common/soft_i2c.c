@@ -115,7 +115,7 @@ int soft_i2c_xfer(struct soft_i2c *i2c, unsigned char slave_addr, unsigned char 
 	}
 
 	if (wlen) {
-		ret = __write(i2c, slave_addr);
+		ret = __write(i2c, slave_addr << 1);
 		if (ret)
 			goto exit;
 		for (i = 0; i < wlen; i ++) {

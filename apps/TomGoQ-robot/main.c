@@ -5,6 +5,7 @@
 #define SHELL_UART_SPEED 9600
 
 int shell_soft_i2c_scan(int argc, char **argv);
+int shell_mpu6050_test(int argc, char **argv);
 
 static int shell_test(int argc, char **argv)
 {
@@ -56,6 +57,11 @@ static const struct shell_cmd app_cmds[] = {
 		.cmd_str = "soft_i2c_scan",
 		.help_str = "soft i2c scan",
 		.fn = shell_soft_i2c_scan,
+	},
+	{
+		.cmd_str = "mp6050_test",
+		.help_str = "mp6050 test",
+		.fn = shell_mpu6050_test,
 	},
 	{
 		.cmd_str = "test",

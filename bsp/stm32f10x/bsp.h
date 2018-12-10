@@ -99,6 +99,7 @@ static inline void abort(void)
 
 void delay_us(unsigned int us);
 void delay_ms(unsigned int ms);
+unsigned long bsp_get_uptime_us(void);
 
 void bsp_init(void);
 

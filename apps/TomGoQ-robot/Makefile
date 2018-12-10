@@ -5,4 +5,4 @@ SOC = stm32f10x_md
 BOARD = stm32_min_dev
 
 SOURCES += $(CURDIR)/main.c \
-	   $(CURDIR)/i2c.c
+	   $(CURDIR)/mpu6050.c

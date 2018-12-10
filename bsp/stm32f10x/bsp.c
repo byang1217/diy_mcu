@@ -1,11 +1,17 @@
 #include "bsp.h"
 
 static char interrupt_disable_depth;
+static unsigned long ticks_count;
 
 void assert_param(int cond)
 {
 	if (!cond)
 		abort();
+}
+
+unsigned long bsp_get_uptime_us(void)
+{
+	return ticks_count * (1000000 / HZ) + SysTick->VAL / (SystemCoreClock / 1000000);
 }
 
 __attribute__((optimize("-O0"))) void delay_us(unsigned int us)
@@ -66,7 +72,7 @@ long interrupt_save(void)
 
 void SysTick_Handler(void)
 {
-
+	ticks_count++;
 }
 
 void bsp_gpio_mode(int pin, int mode)
