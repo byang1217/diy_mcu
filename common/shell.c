@@ -70,6 +70,38 @@ void shell_kick(struct shell *sh)
 		if (c < 0)
 			return;
 
+		if (c == 0x1b) { // esc
+			sh->esc_seq = 1;
+			continue;
+		}
+
+		if (sh->esc_seq == 1) {
+			if (c == '[') { // esc + [
+				sh->esc_seq = 2;
+				continue;
+			} else {
+				sh->esc_seq = 0;
+			}
+		}
+
+		if (sh->esc_seq == 2) {
+			if (c == '1' || c == '4' || (c >= '0' && c <= '9')) { // home, end, ...
+				//TODO
+				sh->esc_seq = 3;
+				continue;
+			}
+			if (c == 'A' || c == 'B' || c == 'C' || c == 'D' || (c >= 'E' && c <= 'Z')) { //up down right left, ...
+				//TODO
+			}
+			sh->esc_seq = 0;
+			continue;
+		}
+
+		if (sh->esc_seq == 3) {
+			sh->esc_seq = 0;
+			continue;
+		}
+
 		/* Backspace or delete */
 		if (c == '\b' || c == 127) {
 			sh->line[--sh->line_end] = 0;
