@@ -59,10 +59,10 @@ static int string_to_argv(char *str, char **argv)
 void shell_kick(struct shell *sh)
 {
 	const struct shell_cmd *cmd = NULL;
-	char *line;
 	char *argv[SHELL_MAX_PARAMS];
 	int argc;
 	int i;
+	char line[SHELL_MAX_STR_SIZE];
 
 	for (;;) {
 		int c;
@@ -102,8 +102,49 @@ void shell_kick(struct shell *sh)
 			continue;
 		}
 
+		if (c == '\t') {
+			sh->tab_seq ++;
+			strcpy(line, sh->line);
+			argc = string_to_argv(line, argv);
+			if (argc == 1) {
+				uint8_t found = 0;
+				uint8_t num = 0;
+				uint8_t len = strlen(argv[0]);
+				for (i = 0; i < sh->cmd_num; i ++) {
+					if (strncmp(argv[0], sh->cmds[i].cmd_str, len) == 0) {
+						num ++;
+						if (num > 1) {
+							if (num == 2)
+								shell_print(sh, "\n%s", sh->cmds[found].cmd_str);
+							shell_print(sh, "\n%s", sh->cmds[i].cmd_str);
+						}
+						found = i;
+					}
+				}
+				if (num == 1) {
+					if (strcmp(argv[0], sh->cmds[found].cmd_str) == 0) { //full matched
+						if (sh->tab_seq == 2) { // double tab for help
+							shell_print(sh, "\n%s - %s\n", sh->cmds[found].cmd_str, sh->cmds[found].help_str);
+							shell_print(sh, "\n%s%s", SHELL_PROMPT_STR, sh->line);
+						}
+						continue;
+					}
+					strcpy(sh->line, sh->cmds[found].cmd_str);
+					strcat(sh->line, " ");
+					sh->line_end = strlen(sh->line);
+				}
+				if (num > 0)
+					shell_print(sh, "\n%s%s", SHELL_PROMPT_STR, sh->line);
+			}
+			continue;
+		} else {
+			sh->tab_seq = 0;
+		}
+
 		/* Backspace or delete */
 		if (c == '\b' || c == 127) {
+			if (sh->line_end == 0)
+				continue;
 			sh->line[--sh->line_end] = 0;
 			if (!sh->echo_disable) {
 				/* echo */
@@ -127,7 +168,7 @@ void shell_kick(struct shell *sh)
 			break;
 		}
 
-		if (sh->line_end >= sizeof(sh->line))
+		if (sh->line_end >= sizeof(sh->line) - 1)
 			continue;
 
 		sh->line[sh->line_end++] = c;
@@ -138,10 +179,8 @@ void shell_kick(struct shell *sh)
 	argc = string_to_argv(sh->line, argv);
 	if (argc > 0) {
 		if (strcmp(argv[0], "help") == 0) {
-			for (i = 0; i < sh->cmd_num; i ++) {
-				shell_print(sh, "%s\n", sh->cmds[i].cmd_str);
-				shell_print(sh, "\t%s\n", sh->cmds[i].help_str);
-			}
+			for (i = 0; i < sh->cmd_num; i ++)
+				shell_print(sh, "%s - %s\n", sh->cmds[i].cmd_str, sh->cmds[i].help_str);
 			goto exit;
 		}
 		for (i = 0; i < sh->cmd_num; i ++) {
@@ -203,6 +242,11 @@ static const struct shell_cmd test_cmds[] = {
 	{
 		.cmd_str = "test_2",
 		.help_str = "test 002",
+		.fn = shell_test,
+	},
+	{
+		.cmd_str = "hello",
+		.help_str = "hello test",
 		.fn = shell_test,
 	},
 };

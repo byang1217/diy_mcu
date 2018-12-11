@@ -16,6 +16,7 @@ struct shell_cmd {
 struct shell {
 	char line[SHELL_MAX_STR_SIZE];
 	int line_end;
+	char tab_seq;
 	char echo_disable;
 	char esc_seq;
 	int (*shell_putc)(int c);
