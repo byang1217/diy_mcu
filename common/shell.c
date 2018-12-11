@@ -64,6 +64,10 @@ void shell_kick(struct shell *sh)
 	int i;
 	char line[SHELL_MAX_STR_SIZE];
 
+	if (!sh->init_done) {
+		shell_print(sh, "%s", SHELL_PROMPT_STR);
+		sh->init_done = 1;
+	}
 	for (;;) {
 		int c;
 		c = sh->shell_getc();
@@ -90,7 +94,20 @@ void shell_kick(struct shell *sh)
 				sh->esc_seq = 3;
 				continue;
 			}
-			if (c == 'A' || c == 'B' || c == 'C' || c == 'D' || (c >= 'E' && c <= 'Z')) { //up down right left, ...
+			if (c == 'A' || c == 'B') { //UP, DOWN
+				if (c == 'A')
+					sh->his_seq = sh->his_seq == 0 ? SHELL_MAX_HISTORY_NUM - 1 : sh->his_seq - 1;
+				if (c == 'B')
+					sh->his_seq = sh->his_seq == SHELL_MAX_HISTORY_NUM - 1 ? 0 : sh->his_seq + 1;
+				if (strlen(sh->his_lines[sh->his_seq]) > 0) {
+					for (i = 0; i < strlen(sh->line); i++)
+						shell_print(sh, "\b \b");
+					strcpy(sh->line, sh->his_lines[sh->his_seq]);
+					sh->line_end = strlen(sh->line);
+					shell_print(sh, "%s", sh->line);
+				}
+			}
+			if (/* c == 'A' || c == 'B' || */ c == 'C' || c == 'D' || (c >= 'E' && c <= 'Z')) { //up down right left, ...
 				//TODO
 			}
 			sh->esc_seq = 0;
@@ -115,26 +132,31 @@ void shell_kick(struct shell *sh)
 						num ++;
 						if (num > 1) {
 							if (num == 2)
-								shell_print(sh, "\n%s", sh->cmds[found].cmd_str);
-							shell_print(sh, "\n%s", sh->cmds[i].cmd_str);
+								shell_print(sh, "\n%s - %s\n", sh->cmds[found].cmd_str, sh->cmds[found].help_str);
+							shell_print(sh, "%s - %s\n", sh->cmds[i].cmd_str, sh->cmds[i].help_str);
 						}
 						found = i;
 					}
 				}
 				if (num == 1) {
 					if (strcmp(argv[0], sh->cmds[found].cmd_str) == 0) { //full matched
+/*
 						if (sh->tab_seq == 2) { // double tab for help
 							shell_print(sh, "\n%s - %s\n", sh->cmds[found].cmd_str, sh->cmds[found].help_str);
 							shell_print(sh, "\n%s%s", SHELL_PROMPT_STR, sh->line);
 						}
+*/
 						continue;
 					}
+					for (i = 0; i < strlen(sh->line); i++)
+						shell_print(sh, "\b \b");
 					strcpy(sh->line, sh->cmds[found].cmd_str);
 					strcat(sh->line, " ");
 					sh->line_end = strlen(sh->line);
+					shell_print(sh, "%s", sh->line);
 				}
-				if (num > 0)
-					shell_print(sh, "\n%s%s", SHELL_PROMPT_STR, sh->line);
+				if (num > 1)
+					shell_print(sh, "%s%s", SHELL_PROMPT_STR, sh->line);
 			}
 			continue;
 		} else {
@@ -146,13 +168,11 @@ void shell_kick(struct shell *sh)
 			if (sh->line_end == 0)
 				continue;
 			sh->line[--sh->line_end] = 0;
-			if (!sh->echo_disable) {
-				/* echo */
-				sh->shell_putc('\b');
-				/* send space + \b to delete character */
-				sh->shell_putc(' ');
-				sh->shell_putc('\b');
-			}
+			/* echo */
+			sh->shell_putc('\b');
+			/* send space + \b to delete character */
+			sh->shell_putc(' ');
+			sh->shell_putc('\b');
 			continue;
 		}
 
@@ -160,11 +180,9 @@ void shell_kick(struct shell *sh)
 			continue;
 
 		if (c == '\r') {
-			if (!sh->echo_disable) {
-				/* echo */
-				sh->shell_putc('\r');
-				sh->shell_putc('\n');
-			}
+			/* echo */
+			sh->shell_putc('\r');
+			sh->shell_putc('\n');
 			break;
 		}
 
@@ -175,8 +193,8 @@ void shell_kick(struct shell *sh)
 		sh->shell_putc(c);
 	}
 
-	//sh->line will be destroyed
-	argc = string_to_argv(sh->line, argv);
+	strcpy(line, sh->line);
+	argc = string_to_argv(line, argv);
 	if (argc > 0) {
 		if (strcmp(argv[0], "help") == 0) {
 			for (i = 0; i < sh->cmd_num; i ++)
@@ -205,6 +223,16 @@ void shell_kick(struct shell *sh)
 	}
 
 exit:
+	for (i = 0; i < SHELL_MAX_HISTORY_NUM; i ++) {
+		if (strcmp(sh->line, sh->his_lines[i]) == 0)
+			break;
+	}
+	if (i >= SHELL_MAX_HISTORY_NUM) {
+		sh->his_end ++;
+		if (sh->his_end >= SHELL_MAX_HISTORY_NUM)
+			sh->his_end = 0;
+		strcpy(sh->his_lines[sh->his_end], sh->line);
+	}
 	memset(sh->line, 0, sizeof(sh->line));
 	sh->line_end = 0;
 	shell_print(sh, SHELL_PROMPT_STR);

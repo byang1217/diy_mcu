@@ -1,6 +1,8 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
+
 #ifndef __ASSEMBLY__
 #include <stdint.h>
 #include <stdarg.h>
