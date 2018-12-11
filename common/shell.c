@@ -23,8 +23,11 @@ void shell_print(struct shell *sh, const char *fmt, ...)
 	vsnprintf(tmp, sizeof(tmp), fmt, args);
 	va_end(args);
 
-	for (i = 0; tmp[i] != 0 && i < sizeof(tmp); i++)
+	for (i = 0; tmp[i] != 0 && i < sizeof(tmp); i++) {
 		sh->shell_putc(tmp[i]);
+		if (tmp[i] == '\n' && (i == 0 || tmp[i - 1] != '\r'))
+			sh->shell_putc('\r');
+	}
 }
 
 static int string_to_argv(char *str, char **argv)

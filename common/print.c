@@ -1,5 +1,6 @@
 #include "common.h"
 
+#if 0 //use sprintf.c
 typedef unsigned char bool;
 #define false 0
 #define true 1
@@ -206,6 +207,7 @@ int sprintf(char *dest, const char *fmt, ...)
 	va_end(args);
 	return len;
 }
+#endif
 
 void pr_log(const char *fmt, ...)
 {
@@ -217,7 +219,10 @@ void pr_log(const char *fmt, ...)
 	vsnprintf(tmp, sizeof(tmp), fmt, args);
 	va_end(args);
 
-	for (i = 0; tmp[i] != 0 && i < sizeof(tmp); i++)
+	for (i = 0; tmp[i] != 0 && i < sizeof(tmp); i++) {
 		default_shell.shell_putc(tmp[i]);
+		if (tmp[i] == '\n' && (i == 0 || tmp[i - 1] != '\r'))
+			default_shell.shell_putc('\r');
+	}
 }
 
