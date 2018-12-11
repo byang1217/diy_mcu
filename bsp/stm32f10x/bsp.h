@@ -7,6 +7,8 @@
 #define RAM_START 0x20000000
 #define RAM_LEN 0x00005000
 
+#define STACK_SIZE 0x00001000
+
 #ifndef HZ
 #define HZ 100
 #endif

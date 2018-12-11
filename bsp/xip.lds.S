@@ -28,6 +28,15 @@ SECTIONS
 		_sidata = _etext;
 	} >ROM
 
+	.stack :
+	{
+		. = ALIGN(4);
+		_sstack = .;
+		. += STACK_SIZE;
+		. = ALIGN(4);
+		_estack = . ;
+	} > RAM
+
 	.data  : AT ( _sidata )
 	{
 		. = ALIGN(4);
@@ -51,6 +60,4 @@ SECTIONS
 
 	end = _ebss;
 	_end = _ebss;
-
-	_estack = RAM_START + RAM_LEN - 4;
 }
