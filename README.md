@@ -1,4 +1,4 @@
-# my_stm32
+# stm32
 
 ## toolchain
 https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads
@@ -16,3 +16,13 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 ## stm32 hw lib
 https://www.stmicroelectronics.com.cn/en/embedded-software/stm32-standard-peripheral-libraries.html
+
+
+# STC15
+
+## toolchain
+sdcc
+
+## flash tool
+https://github.com/grigorig/stcgal
+(apt-get install python3-tqdm python3-serial)
