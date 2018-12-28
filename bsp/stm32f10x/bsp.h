@@ -94,10 +94,6 @@ enum {
 #define PWM_4_4_PB_9 (PWM_TIM4_CH4_PIN | 4 << 8 | 4 << 16)
 
 void assert_param(int cond);
-static inline void abort(void)
-{
-	__asm__ __volatile__ ("bkpt #0");
-}
 
 void delay_us(unsigned int us);
 void delay_ms(unsigned int ms);

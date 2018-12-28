@@ -1,7 +1,23 @@
+#include "common.h"
 #include "bsp.h"
 
 static char interrupt_disable_depth;
 static unsigned long ticks_count;
+
+void abort(void)
+{
+	if (default_shell.shell_putc) {
+		default_shell.shell_putc('\r');
+		default_shell.shell_putc('\n');
+		default_shell.shell_putc('a');
+		default_shell.shell_putc('b');
+		default_shell.shell_putc('o');
+		default_shell.shell_putc('r');
+		default_shell.shell_putc('t');
+	}
+	__asm__ __volatile__ ("bkpt #0");
+	while(1);
+}
 
 void assert_param(int cond)
 {

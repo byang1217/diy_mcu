@@ -5,4 +5,5 @@ SOC = stm32f10x_md
 BOARD = stm32_min_dev
 
 SOURCES += $(CURDIR)/main.c \
-	   $(CURDIR)/mpu6050.c
+	   $(CURDIR)/mpu6050.c \
+	   $(CURDIR)/servo_pwm.c
