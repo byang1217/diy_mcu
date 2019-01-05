@@ -4,6 +4,7 @@
 #define SHELL_UART_ID 1
 #define SHELL_UART_SPEED 9600
 
+int shell_robot_test(int argc, char **argv);
 int shell_soft_i2c_scan(int argc, char **argv);
 int shell_mpu6050_test(int argc, char **argv);
 
@@ -52,6 +53,11 @@ static const struct shell_cmd app_cmds[] = {
 		.cmd_str = "led",
 		.help_str = "led toggle",
 		.fn = shell_onboard_led_toggle,
+	},
+	{
+		.cmd_str = "robot",
+		.help_str = "robot LH LL RH RL LA RA",
+		.fn = shell_robot_test,
 	},
 	{
 		.cmd_str = "soft_i2c_scan",
