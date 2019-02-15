@@ -1,12 +1,20 @@
 #include "common.h"
 #include "version.h"
 
+#include "otto.h"
+
 #define SHELL_UART_ID 1
 #define SHELL_UART_SPEED 9600
 
 int shell_robot_test(int argc, char **argv);
 int shell_soft_i2c_scan(int argc, char **argv);
 int shell_mpu6050_test(int argc, char **argv);
+
+static int shell_otto(int argc, char **argv)
+{
+	otto_shell_handle(argc, argv);
+	return 0;
+}
 
 static int shell_test(int argc, char **argv)
 {
@@ -49,6 +57,11 @@ static int shell_getc(void)
 }
 
 static const struct shell_cmd app_cmds[] = {
+	{
+		.cmd_str = "otto",
+		.help_str = "otto",
+		.fn = shell_otto,
+	},
 	{
 		.cmd_str = "led",
 		.help_str = "led toggle",

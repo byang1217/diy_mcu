@@ -21,11 +21,52 @@ SECTIONS
 		. = ALIGN(4);
 		*(.text)
 		*(.text.*)
+
+		. = ALIGN(4);
+		*(.glue_7)         /* glue arm to thumb code */
+		*(.glue_7t)        /* glue thumb to arm code */
+		*(.eh_frame)
+
+		. = ALIGN(4);
+		KEEP (*(.init))
+		KEEP (*(.fini))
+		. = ALIGN(4);
+	} >ROM
+
+	.rodata :
+	{
+		. = ALIGN(4);
 		*(.rodata)
 		*(.rodata*)
 		. = ALIGN(4);
-		_etext = .;
-		_sidata = _etext;
+	} >ROM
+
+	.ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >ROM
+	.ARM : {
+		__exidx_start = .;
+		*(.ARM.exidx*)
+		__exidx_end = .;
+	} >ROM
+
+	.preinit_array     :
+	{
+		PROVIDE_HIDDEN (__preinit_array_start = .);
+		KEEP (*(.preinit_array*))
+		PROVIDE_HIDDEN (__preinit_array_end = .);
+	} >ROM
+	.init_array :
+	{
+		PROVIDE_HIDDEN (__init_array_start = .);
+		KEEP (*(SORT(.init_array.*)))
+		KEEP (*(.init_array*))
+		PROVIDE_HIDDEN (__init_array_end = .);
+	} >ROM
+	.fini_array :
+	{
+		PROVIDE_HIDDEN (__fini_array_start = .);
+		KEEP (*(SORT(.fini_array.*)))
+		KEEP (*(.fini_array*))
+		PROVIDE_HIDDEN (__fini_array_end = .);
 	} >ROM
 
 	.stack :
@@ -37,7 +78,9 @@ SECTIONS
 		_estack = . ;
 	} > RAM
 
-	.data  : AT ( _sidata )
+	/* used by the startup to initialize data */
+	_sidata = LOADADDR(.data);
+	.data :
 	{
 		. = ALIGN(4);
 		_sdata = . ;
@@ -45,19 +88,28 @@ SECTIONS
 		*(.data.*)
 		. = ALIGN(4);
 		_edata = . ;
-	} >RAM
+	} >RAM AT>ROM
 
+	. = ALIGN(4);
 	.bss :
 	{
-	    . = ALIGN(4);
-        _sbss = .;
+		. = ALIGN(4);
+		_sbss = .;
 		*(.bss)
 		*(.bss.*)
 		*(COMMON)
-	    . = ALIGN(4);
-   	 _ebss = . ;
+		. = ALIGN(4);
+		_ebss = . ;
 	} > RAM
 
 	end = _ebss;
 	_end = _ebss;
+
+	/* Remove information from the standard libraries */
+	/DISCARD/ :
+	{
+		libc.a ( * )
+		libm.a ( * )
+		libgcc.a ( * )
+	}
 }

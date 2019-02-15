@@ -3,7 +3,7 @@ BSP = stm32f10x
 # stm32f10x_ld stm32f10x_ld_vl stm32f10x_md stm32f10x_md_vl stm32f10x_hd stm32f10x_hd_vl stm32f10x_xl stm32f10x_cl
 SOC = stm32f10x_md
 BOARD = stm32_min_dev
-MODULES = soft_i2c soft_uart
+MODULES = soft_i2c soft_uart arduino otto
 
 SOURCES += $(CURDIR)/main.c \
 	   $(CURDIR)/mpu6050.c \

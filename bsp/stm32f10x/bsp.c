@@ -30,6 +30,21 @@ unsigned long bsp_get_uptime_us(void)
 	return ticks_count * (1000000 / HZ) + SysTick->VAL / (SystemCoreClock / 1000000);
 }
 
+unsigned long micros(void)
+{
+	return bsp_get_uptime_us();
+}
+
+unsigned long bsp_get_uptime_ms(void)
+{
+	return ticks_count * (1000 / HZ) + SysTick->VAL / (SystemCoreClock / 1000);
+}
+
+unsigned long millis(void)
+{
+	return bsp_get_uptime_ms();
+}
+
 __attribute__((optimize("-O0"))) void delay_us(unsigned int us)
 {
 #if 1
