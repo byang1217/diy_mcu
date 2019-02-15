@@ -14,5 +14,11 @@ SOURCES += $(CURDIR)/Oscillator/Oscillator.cpp
 CFLAGS += -I$(CURDIR)/TimerFreeTone
 SOURCES += $(CURDIR)/TimerFreeTone/TimerFreeTone.cpp
 
+CFLAGS += -I$(CURDIR)/US
+SOURCES += $(CURDIR)/US/US.cpp
+
 CFLAGS += -I$(CURDIR)/OttoARM
 SOURCES += $(CURDIR)/OttoARM/OttoARM.cpp
+
+CFLAGS += -I$(CURDIR)
+SOURCES += $(CURDIR)/otto.cpp

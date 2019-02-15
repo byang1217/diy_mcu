@@ -9,43 +9,21 @@
 
 #include "shell.h"
 
+#include "otto.h"
+
 static struct termios orig_attr;
 
-static int shell_test(int argc, char **argv)
+static int shell_otto(int argc, char **argv)
 {
-	int i;
-
-	pr_log("argc = %d\n", argc);
-	for (i = 0; i < argc; i++)
-		pr_log("argv[%d]: \"%s\"\n", i, argv[i]);
-
-	if (strcmp(argv[0], "q") == 0) {
-		tcsetattr(0, TCSANOW, &orig_attr);
-		exit(0);
-	}
+	otto_shell_handle(argc, argv);
 	return 0;
 }
 
 static const struct shell_cmd test_cmds[] = {
 	{
-		.cmd_str = "q",
-		.help_str = "exit shell",
-		.fn = shell_test,
-	},
-	{
-		.cmd_str = "test_1",
-		.help_str = "test 001",
-		.fn = shell_test,
-	},
-	{
-		.cmd_str = "test_2",
-		.help_str = "test 002",
-		.fn = shell_test,
-	},
-	{
-		.cmd_str = "hello",
-		.help_str = "hello test",
-		.fn = shell_test,
+		.cmd_str = "otto",
+		.help_str = "otto",
+		.fn = shell_otto,
 	},
 };
 

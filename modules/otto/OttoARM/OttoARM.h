@@ -3,7 +3,7 @@
 
 #include <Servo.h>
 #include <Oscillator.h>
-#include <EEPROM.h>
+//#include <EEPROM.h>
 
 #include <US.h>
 #include "MaxMatrix.h"
@@ -20,11 +20,6 @@
 //#define SMALL       5
 //#define MEDIUM      15
 //#define BIG         30
-
-#define PIN_Buzzer  13
-#define PIN_Trigger 8
-#define PIN_Echo    9
-#define PIN_NoiseSensor A6
 
 //////////////////////////////////////////////////////////////////
 //***********************************************************************************
@@ -255,7 +250,7 @@ class Otto
   public:
 
     //-- Otto initialization
-    void init(int YL, int YR, int RL, int RR, int LA, int RA,  bool load_calibration=true, int NoiseSensor=PIN_NoiseSensor, int Buzzer=PIN_Buzzer, int USTrigger=PIN_Trigger, int USEcho=PIN_Echo);
+    void init(int YL, int YR, int RL, int RR, int LA, int RA,  bool load_calibration, int NoiseSensor, int Buzzer, int USTrigger, int USEcho);
 
     //-- Attach & detach functions
     void attachServos();

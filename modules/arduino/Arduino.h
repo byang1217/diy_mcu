@@ -98,20 +98,14 @@ unsigned long pulseInLong(uint8_t pin, uint8_t state, unsigned long timeout);
 void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val);
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder);
 
+void tone(uint8_t _pin, unsigned int frequency, unsigned long duration);
+void noTone(uint8_t _pin);
+
 void setup(void);
 void loop(void);
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
-
-void tone(uint8_t _pin, unsigned int frequency, unsigned long duration = 0);
-void noTone(uint8_t _pin);
-
-// WMath prototypes
-long random(long);
-long random(long, long);
-void randomSeed(unsigned long);
-long map(long, long, long, long, long);
 
 #endif

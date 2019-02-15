@@ -26,6 +26,7 @@ void Otto::init(int YL, int YR, int RL, int RR, int LA, int RA, bool load_calibr
   attachServos();
   isOttoResting=false;
 
+#if 0
   if (load_calibration) {
     for (int i = 0; i < 6; i++) {
       int servo_trim = EEPROM.read(i);
@@ -33,6 +34,7 @@ void Otto::init(int YL, int YR, int RL, int RR, int LA, int RA, bool load_calibr
       servo[i].SetTrim(servo_trim);
     }
   }
+#endif
   
   for (int i = 0; i < 6; i++) servo_position[i] = 90;
 
@@ -81,11 +83,11 @@ void Otto::setTrims(int YL, int YR, int RL, int RR, int LA, int RA) {
 }
 
 void Otto::saveTrimsOnEEPROM() {
-  
+#if 0
   for (int i = 0; i < 6; i++){ 
       EEPROM.write(i, servo[i].getTrim());
   } 
-      
+#endif  
 }
 
 

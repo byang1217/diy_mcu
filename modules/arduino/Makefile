@@ -3,4 +3,4 @@
 #
 
 CFLAGS += -I$(CURDIR)
-SOURCES += $(CURDIR)/Servo.cpp
+SOURCES += $(CURDIR)/Servo.cpp $(CURDIR)/pin.c

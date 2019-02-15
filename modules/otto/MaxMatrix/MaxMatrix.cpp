@@ -8,18 +8,23 @@
 #include "Arduino.h"
 #include "MaxMatrix.h"
 
+//#define MAXMATRIX_ENABLE
+
 MaxMatrix::MaxMatrix(byte _data, byte _load, byte _clock, byte _num) 
 {
+#ifdef MAXMATRIX_ENABLE
 	data = _data;
 	load = _load;
 	clock = _clock;
 	num = _num;
 	for (int i=0; i<80; i++)
 		buffer[i] = 0;
+#endif
 }
 
 void MaxMatrix::init()
 {
+#ifdef MAXMATRIX_ENABLE
 	pinMode(data,  OUTPUT);
 	pinMode(clock, OUTPUT);
 	pinMode(load,  OUTPUT);
@@ -34,24 +39,30 @@ void MaxMatrix::init()
 	clearMatrix();
 	
 	setIntensity(0x0f);    // the first 0x0f is the value you can set
+#endif
 }
 
 void MaxMatrix::setIntensity(byte intensity)
 {
+#ifdef MAXMATRIX_ENABLE
 	setCommand(max7219_reg_intensity, intensity);
+#endif
 }
 
 void MaxMatrix::clearMatrix()
 {
+#ifdef MAXMATRIX_ENABLE
 	for (int i=0; i<8; i++) 
 		setColumnAll(i,0);
 		
 	for (int i=0; i<80; i++)
 		buffer[i] = 0;
+#endif
 }
 
 void MaxMatrix::setCommand(byte command, byte value)
 {
+#ifdef MAXMATRIX_ENABLE
 	digitalWrite(load, LOW);    
 	for (int i=0; i<num; i++) 
 	{
@@ -60,11 +71,13 @@ void MaxMatrix::setCommand(byte command, byte value)
 	}
 	digitalWrite(load, LOW);
 	digitalWrite(load, HIGH);
+#endif
 }
 
 
 void MaxMatrix::setColumn(byte col, byte value)
 {
+#ifdef MAXMATRIX_ENABLE
 	int n = col / 8;
 	int c = col % 8;
 	digitalWrite(load, LOW);    
@@ -85,10 +98,12 @@ void MaxMatrix::setColumn(byte col, byte value)
 	digitalWrite(load, HIGH);
 	
 	buffer[col] = value;
+#endif
 }
 
 void MaxMatrix::setColumnAll(byte col, byte value)
 {
+#ifdef MAXMATRIX_ENABLE
 	digitalWrite(load, LOW);    
 	for (int i=0; i<num; i++) 
 	{
@@ -98,10 +113,12 @@ void MaxMatrix::setColumnAll(byte col, byte value)
 	}
 	digitalWrite(load, LOW);
 	digitalWrite(load, HIGH);
+#endif
 }
 
 void MaxMatrix::setDot(byte col, byte row, byte value)
 {
+#ifdef MAXMATRIX_ENABLE
     bitWrite(buffer[col], row, value);
 
 	int n = col / 8;
@@ -122,6 +139,7 @@ void MaxMatrix::setDot(byte col, byte row, byte value)
 	}
 	digitalWrite(load, LOW);
 	digitalWrite(load, HIGH);
+#endif
 }
 
 /* void MaxMatrix::writeSprite(int x, int y, const byte* sprite)
@@ -213,10 +231,12 @@ void MaxMatrix::shiftDown(bool rotate)
 */
 // rutina para Zowi, para meter sus caritas en la matriz de 8
 void MaxMatrix::writeFull(unsigned long value) {
+#ifdef MAXMATRIX_ENABLE
 	for (int r=0; r<5;r++){
             for (int c=0; c<6; c++){
                 setDot(6-c,7-r,(1L & (value >> r*6+c)));
                 }
             }
+#endif
 }
 
