@@ -18,6 +18,22 @@ unsigned long bsp_get_uptime_us(void)
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000000 + tv.tv_usec);
 }
+unsigned long micros(void)
+{
+	return bsp_get_uptime_us();
+}
+
+unsigned long bsp_get_uptime_ms(void)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+unsigned long millis(void)
+{
+	return bsp_get_uptime_ms();
+}
 
 void delay_us(unsigned int us)
 {

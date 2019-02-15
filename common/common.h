@@ -8,6 +8,11 @@
 #include <stdarg.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "shell.h"
 
@@ -29,6 +34,8 @@ void delay_ms(unsigned int ms);
 void interrupt_restore(long flags);
 long interrupt_save(void);
 
+#ifdef __cplusplus
+}
 #endif
-
+#endif /* __ASSEMBLY */
 #endif /* __COMMON_H__ */

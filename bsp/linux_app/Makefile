@@ -12,9 +12,6 @@ LDFLAGS := $(filter-out -nostdlib -static, $(LDFLAGS))
 SOURCES += $(CURDIR)/bsp.c
 
 all: $(OUT)/$(TARGET)
-install:
-	$(Q)echo "install not support!!!"
-
 debug: $(OUT)/$(TARGET)
 
 $(OUT)/$(TARGET): $(OUT)/version.h $(OBJS)

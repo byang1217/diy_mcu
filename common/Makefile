@@ -7,6 +7,4 @@ SOURCES += $(CURDIR)/print.c \
 	   $(CURDIR)/prf.c \
 	   $(CURDIR)/sprintf.c \
 	   $(CURDIR)/shell.c \
-	   $(CURDIR)/string.c \
-	   $(CURDIR)/soft_uart.c \
-	   $(CURDIR)/soft_i2c.c
+	   $(CURDIR)/string.c

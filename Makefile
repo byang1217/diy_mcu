@@ -41,6 +41,7 @@ gdeps := Makefile
 SOURCES :=
 OBJS =
 OBJS += $(patsubst %.c,$(OUT)/%.o,$(filter %.c, $(SOURCES)))
+OBJS += $(patsubst %.cpp,$(OUT)/%.o,$(filter %.cpp, $(SOURCES)))
 OBJS += $(patsubst %.s,$(OUT)/%.o,$(filter %.s, $(SOURCES)))
 OBJS += $(patsubst %.S,$(OUT)/%.o,$(filter %.S, $(SOURCES)))
 
@@ -51,6 +52,10 @@ CFLAGS += -DAPP=$(APP)
 -include $(CURDIR)/Makefile
 
 CURDIR := common
+gdeps += $(CURDIR)/Makefile
+-include $(CURDIR)/Makefile
+
+CURDIR := modules
 gdeps += $(CURDIR)/Makefile
 -include $(CURDIR)/Makefile
 
@@ -111,6 +116,16 @@ export GDB	= $(CROSS_COMPILE)gdb
 .SUFFIXES :
 .SUFFIXES : .o .s .S .c
 $(OUT)/%.o: %.c $(gdeps)
+	$(Q)echo "CC $<"
+	mkdir -p `dirname $@`
+ifeq ($(DEBUG),y)
+	$(Q)$(CC) -E $(CFLAGS) -c -o $(patsubst %.o,%.e,$@) $<
+endif
+	$(Q)$(CC) $(CFLAGS) -MM $< > $(patsubst %.o,%.dep,$@)
+	$(Q)sed -i 's+^.*.o:+$@:+' $(patsubst %.o,%.dep,$@)
+	$(Q)$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OUT)/%.o: %.cpp $(gdeps)
 	$(Q)echo "CC $<"
 	mkdir -p `dirname $@`
 ifeq ($(DEBUG),y)

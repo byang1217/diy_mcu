@@ -11,6 +11,7 @@ void assert_param(int cond);
 void delay_us(unsigned int us);
 void delay_ms(unsigned int ms);
 unsigned long bsp_get_uptime_us(void);
+unsigned long bsp_get_uptime_ms(void);
 
 void bsp_init(void);
 
