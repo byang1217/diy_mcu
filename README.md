@@ -1,6 +1,7 @@
 # stm32
 
 ## toolchain
+https://github.com/stm32duino/arm-none-eabi-gcc/releases/download/6-2017-q2-update/gcc-arm-none-eabi-6-2017-q2-update-linux64.tar.bz2
 https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads
 
 ## stlink utils
