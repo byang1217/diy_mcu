@@ -1,5 +1,10 @@
 #include "common.h"
 #include "bsp.h"
+#include "hw_config.h"
+#include "usb_lib.h"
+#include "usb_desc.h"
+#include "usb_pwr.h"
+
 
 static char interrupt_disable_depth;
 static unsigned long ticks_count;
@@ -363,10 +368,66 @@ void bsp_pwm_set(int pwm, int period_us, int pulse_us)
 	bsp_gpio_mode(pin, GPIO_Mode_AF_PP);
 }
 
-#include "hw_config.h"
-#include "usb_lib.h"
-#include "usb_desc.h"
-#include "usb_pwr.h"
+static char *usb_tx_buf, *usb_rx_buf;
+static int usb_tx_max, usb_rx_max, usb_tx_end, usb_rx_end, usb_tx_pending;
+
+/* call from isr */
+void usb_uart_tx_async_handle(void)
+{
+	if (usb_tx_pending || usb_tx_end <= 0)
+		return;
+	UserToPMABufferCopy(usb_tx_buf, ENDP1_TXADDR, usb_tx_end);
+	usb_tx_end = 0;
+	usb_tx_pending = 1;
+	SetEPTxCount(ENDP1, 8);
+	SetEPTxValid(ENDP1); 
+}
+
+/* call from isr */
+void usb_uart_tx_done(void)
+{
+	usb_tx_pending = 0;
+}
+
+/* call from isr */
+void usb_uart_rx(uint8_t* data_buffer, uint8_t Nb_bytes)
+{
+	int len = usb_rx_max - usb_rx_end > Nb_bytes ? Nb_bytes : usb_rx_max - usb_rx_end;
+	memcpy(usb_rx_buf + usb_rx_end, data_buffer, len);
+	usb_rx_end += len;
+}
+
+int usb_uart_gets(char *buf, int len)
+{
+	long flags = interrupt_save();
+	int ret = usb_rx_end > len ? len : usb_rx_end;
+	memcpy(buf, usb_rx_buf, ret);
+	usb_rx_end = 0;
+	interrupt_restore(flags);
+	return ret;
+}
+
+int usb_uart_puts(char *buf, int len)
+{
+	long flags = interrupt_save();
+	int ret = usb_tx_max - usb_tx_end > len ? len : usb_tx_max - usb_tx_end;
+	memcpy(usb_tx_buf + usb_tx_end, buf, ret);
+	usb_tx_end += ret;
+	interrupt_restore(flags);
+	return ret;
+}
+
+void usb_uart_init(char *tx_buf, int tx_max, char *rx_buf, int rx_max)
+{
+	if (tx_max > 64)
+		tx_max = 64;
+	if (rx_max > 64)
+		rx_max = 64;
+	usb_tx_buf = tx_buf;
+	usb_tx_max = tx_max;
+	usb_rx_buf = rx_buf;
+	usb_rx_max = rx_max;
+}
 
 void bsp_usb_init(void)
 {

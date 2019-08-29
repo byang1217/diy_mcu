@@ -3,9 +3,6 @@
 
 #include "otto.h"
 
-#define SHELL_UART_ID 1
-#define SHELL_UART_SPEED 9600
-
 int shell_robot_test(int argc, char **argv);
 int shell_soft_i2c_scan(int argc, char **argv);
 int shell_mpu6050_test(int argc, char **argv);

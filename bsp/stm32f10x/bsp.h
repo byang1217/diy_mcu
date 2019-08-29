@@ -11,6 +11,12 @@
 
 #ifndef HZ
 #define HZ 100
+
+#define SHELL_UART_ID 1
+#define SHELL_UART_SPEED 9600
+
+#define USB_UART_ID 99
+
 #endif
 
 #ifndef __ASSEMBLY__
@@ -115,6 +121,9 @@ void bsp_tim_init(int id, int period_us);
 void bsp_pwm_set(int pwm, int period_us, int pulse_us);
 
 void bsp_usb_init(void);
+void usb_uart_init(char *tx_buf, int tx_max, char *rx_buf, int rx_max);
+int usb_uart_puts(char *buf, int len);
+int usb_uart_gets(char *buf, int len);
 #endif
 
 #endif /* __BSP_H__ */

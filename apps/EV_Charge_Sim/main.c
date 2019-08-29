@@ -1,9 +1,6 @@
 #include "common.h"
 #include "version.h"
 
-#define SHELL_UART_ID 1
-#define SHELL_UART_SPEED 9600
-
 static int shell_test(int argc, char **argv)
 {
 	int i;
@@ -44,24 +41,6 @@ static int shell_getc(void)
 	return bsp_uart_getc(SHELL_UART_ID);
 }
 
-void usb_uart_tx_async_handle(void)
-{
-
-}
-
-void usb_uart_tx_done(void)
-{
-
-}
-
-void usb_uart_rx(uint8_t* data_buffer, uint8_t Nb_bytes)
-{
-	int i;
-
-	for (i = 0; i < Nb_bytes; i++)
-		shell_putc((int)(data_buffer[i]));
-}
-
 static int shell_usb_uart(int argc, char **argv)
 {
 	return 0;
@@ -92,13 +71,27 @@ struct shell default_shell = {
 	.cmd_num = sizeof(app_cmds)/sizeof(app_cmds[0]),
 };
 
+static char usb_uart_tx_buf[64], usb_uart_rx_buf[64];
+static char wbuf[64];
+
+static void ev_charge_sim_handle(void)
+{
+	int ret = usb_uart_gets(wbuf, sizeof(wbuf));
+	if (ret != 0) {
+		wbuf[ret] = 0;
+		pr_log("usb: %s\n", wbuf);
+	}
+}
+
 void main(void)
 {
 	bsp_init();
 	bsp_uart_init(SHELL_UART_ID, SHELL_UART_SPEED);
 	pr_log("\n%s\n", VERSION_STRING);
 	bsp_usb_init();
+	usb_uart_init(usb_uart_tx_buf, sizeof(usb_uart_tx_buf), usb_uart_rx_buf, sizeof(usb_uart_rx_buf));
 	for (;;) {
 		shell_kick(&default_shell);
+		ev_charge_sim_handle();
 	}
 }
