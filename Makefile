@@ -35,7 +35,7 @@ CFLAGS += -O0
 else
 CFLAGS += -Os
 endif
-LDFLAGS := -nostdlib -static -Wl,--gc-sections -lgcc -lm -lc
+LDFLAGS := -static -Wl,--gc-sections -lgcc -lm -lc
 
 gdeps := Makefile
 SOURCES :=
