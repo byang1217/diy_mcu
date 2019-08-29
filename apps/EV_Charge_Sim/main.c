@@ -44,6 +44,29 @@ static int shell_getc(void)
 	return bsp_uart_getc(SHELL_UART_ID);
 }
 
+void usb_uart_tx_async_handle(void)
+{
+
+}
+
+void usb_uart_tx_done(void)
+{
+
+}
+
+void usb_uart_rx(uint8_t* data_buffer, uint8_t Nb_bytes)
+{
+	int i;
+
+	for (i = 0; i < Nb_bytes; i++)
+		shell_putc((int)(data_buffer[i]));
+}
+
+static int shell_usb_uart(int argc, char **argv)
+{
+	return 0;
+}
+
 static const struct shell_cmd app_cmds[] = {
 	{
 		.cmd_str = "led",
@@ -54,6 +77,11 @@ static const struct shell_cmd app_cmds[] = {
 		.cmd_str = "test",
 		.help_str = "test",
 		.fn = shell_test,
+	},
+	{
+		.cmd_str = "usb_uart",
+		.help_str = "usb_uart",
+		.fn = shell_usb_uart,
 	},
 };
 
@@ -69,6 +97,7 @@ void main(void)
 	bsp_init();
 	bsp_uart_init(SHELL_UART_ID, SHELL_UART_SPEED);
 	pr_log("\n%s\n", VERSION_STRING);
+	bsp_usb_init();
 	for (;;) {
 		shell_kick(&default_shell);
 	}

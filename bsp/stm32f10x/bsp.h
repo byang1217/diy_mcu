@@ -113,6 +113,8 @@ int bsp_gpio_get(int pin);
 
 void bsp_tim_init(int id, int period_us);
 void bsp_pwm_set(int pwm, int period_us, int pulse_us);
+
+void bsp_usb_init(void);
 #endif
 
 #endif /* __BSP_H__ */

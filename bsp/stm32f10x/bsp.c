@@ -363,6 +363,28 @@ void bsp_pwm_set(int pwm, int period_us, int pulse_us)
 	bsp_gpio_mode(pin, GPIO_Mode_AF_PP);
 }
 
+#include "hw_config.h"
+#include "usb_lib.h"
+#include "usb_desc.h"
+#include "usb_pwr.h"
+
+void bsp_usb_init(void)
+{
+	bsp_gpio_mode(PA_12, GPIO_Mode_AF_PP);
+	bsp_gpio_set(PA_12, 0);
+	delay_us(100);
+	bsp_gpio_mode(PA_12, GPIO_Mode_IN_FLOATING);
+
+	/* Select USBCLK source */
+	RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_1Div5);
+
+	/* Enable the USB clock */
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USB, ENABLE);
+
+	USB_Interrupts_Config();
+	USB_Init();
+}
+
 void bsp_init(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);

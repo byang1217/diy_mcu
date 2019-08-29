@@ -70,7 +70,39 @@
  #include "stm32303c_eval.h"
 
 #else
- #error "Missing define: Evaluation board (ie. USE_STM3210E_EVAL)"
+ // #error "Missing define: Evaluation board (ie. USE_STM3210E_EVAL)"
+#include "stm32f10x.h"
+#include "misc.h"
+#include "stm32f10x_can.h"
+#include "stm32f10x_dac.h"
+#include "stm32f10x_exti.h"
+#include "stm32f10x_gpio.h"
+#include "stm32f10x_pwr.h"
+#include "stm32f10x_sdio.h"
+#include "stm32f10x_usart.h"
+#include "stm32f10x_adc.h"
+#include "stm32f10x_cec.h"
+#include "stm32f10x_dbgmcu.h"
+#include "stm32f10x_flash.h"
+#include "stm32f10x_i2c.h"
+#include "stm32f10x_rcc.h"
+#include "stm32f10x_spi.h"
+#include "stm32f10x_wwdg.h"
+#include "stm32f10x_bkp.h"
+#include "stm32f10x_crc.h"
+#include "stm32f10x_dma.h"
+#include "stm32f10x_fsmc.h"
+#include "stm32f10x_iwdg.h"
+#include "stm32f10x_rtc.h"
+#include "stm32f10x_tim.h"
+
+  #define EVAL_COM1 USART1
+
+  #define USB_DISCONNECT                      GPIOA
+  #define USB_DISCONNECT_PIN                  GPIO_Pin_12
+  #define RCC_APB2Periph_GPIO_DISCONNECT RCC_APB2Periph_GPIOA
+  #define RCC_APB2Periph_ALLGPIO              (RCC_APB2Periph_GPIOA \
+                                               | RCC_APB2Periph_GPIOB)
 #endif
 
 /* Exported types ------------------------------------------------------------*/

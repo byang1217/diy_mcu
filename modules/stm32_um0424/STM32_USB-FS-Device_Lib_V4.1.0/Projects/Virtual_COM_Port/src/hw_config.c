@@ -315,6 +315,7 @@ void USB_Interrupts_Config(void)
   NVIC_Init(&NVIC_InitStructure);
 #endif /* STM32L1XX_XD */
 
+#if 0
   /* Enable USART Interrupt */
   NVIC_InitStructure.NVIC_IRQChannel = EVAL_COM1_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
@@ -323,6 +324,7 @@ void USB_Interrupts_Config(void)
   NVIC_InitStructure.NVIC_IRQChannel = USARTx_TX_DMA_IRQ;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
   NVIC_Init(&NVIC_InitStructure);
+#endif
 }
 
 /*******************************************************************************
