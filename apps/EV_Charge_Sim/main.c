@@ -80,6 +80,11 @@ static void ev_charge_sim_handle(void)
 	if (ret != 0) {
 		wbuf[ret] = 0;
 		pr_log("usb: %s\n", wbuf);
+		if (strncmp(wbuf, "id", 2) == 0) {
+			uint64_t devid = bsp_get_devid();
+			sprintf(wbuf, "%08x%08x", (int)(devid & 0xffffffff), (int)((devid >> 32) & 0xffffffff));
+			usb_uart_puts(wbuf, 16);
+		}
 	}
 }
 

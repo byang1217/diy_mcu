@@ -30,6 +30,17 @@ void assert_param(int cond)
 		abort();
 }
 
+uint64_t bsp_get_devid(void)
+{
+#define         ID1          (0x1FFFF7E8)
+#define         ID2          (0x1FFFF7EC)
+#define         ID3          (0x1FFFF7F0)
+	uint64_t devid = 0;
+	devid = (uint64_t)(*(uint32_t*)ID1 + *(uint32_t*)ID3) << 32;
+	devid += *(uint32_t*)ID2;
+	return devid;
+}
+
 unsigned long bsp_get_uptime_us(void)
 {
 	return ticks_count * (1000000 / HZ) + SysTick->VAL / (SystemCoreClock / 1000000);
