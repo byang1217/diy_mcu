@@ -12,7 +12,7 @@ LD_SCRIPT := bsp/xip.lds.S
 SOURCES += $(CURDIR)/bsp.c
 
 all: $(OUT)/$(TARGET).bin
-install: install-stlink
+install: install-isp
 debug: debug-stlink
 
 $(OUT)/$(TARGET).bin: $(OUT)/$(TARGET).elf

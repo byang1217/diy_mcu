@@ -90,9 +90,9 @@ $(OUT)/version.h: FORCE
 
 PHONY += help
 help:
-	@echo  "make <app>			- To build specific app"
+	@echo  "make APP=<app> [install/debug]	- To build/download/debug specific app"
 	@echo  "make clean			- Remove all generated files"
-	@echo  "make <app> V=0|1		- 0: quiet build, 1: verbose build"
+	@echo  "make APP=<app> V=0|1		- 0: quiet build, 1: verbose build"
 	@echo
 	@echo "Apps list:"
 	for app in $(APPS_LIST) ;\

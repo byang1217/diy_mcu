@@ -1,4 +1,5 @@
 #include "common.h"
+#include "soft_i2c.h"
 
 #define SCL_PIN	PB_6
 #define SDA_PIN	PB_7
