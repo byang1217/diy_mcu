@@ -74,6 +74,7 @@ struct shell default_shell = {
 static char usb_uart_tx_buf[64], usb_uart_rx_buf[64];
 static char wbuf[64];
 
+/* on host: stty -F /dev/ttyACM0 -icanon */
 static void ev_charge_sim_handle(void)
 {
 	int ret = usb_uart_gets(wbuf, sizeof(wbuf));
