@@ -30,15 +30,14 @@ void assert_param(int cond)
 		abort();
 }
 
-uint64_t bsp_get_devid(void)
+char *bsp_get_sn(void)
 {
 #define         ID1          (0x1FFFF7E8)
 #define         ID2          (0x1FFFF7EC)
 #define         ID3          (0x1FFFF7F0)
-	uint64_t devid = 0;
-	devid = (uint64_t)(*(uint32_t*)ID1 + *(uint32_t*)ID3) << 32;
-	devid += *(uint32_t*)ID2;
-	return devid;
+	static char sn[25];
+	sprintf(sn, "%08x%08x%08x", *(uint32_t*)ID1, *(uint32_t*)ID2, *(uint32_t*)ID3);
+	return sn;
 }
 
 unsigned long bsp_get_uptime_us(void)
@@ -387,11 +386,11 @@ void usb_uart_tx_async_handle(void)
 {
 	if (usb_tx_pending || usb_tx_end <= 0)
 		return;
-	UserToPMABufferCopy(usb_tx_buf, ENDP1_TXADDR, usb_tx_end);
-	usb_tx_end = 0;
 	usb_tx_pending = 1;
-	SetEPTxCount(ENDP1, 8);
+	UserToPMABufferCopy(usb_tx_buf, ENDP1_TXADDR, usb_tx_end);
+	SetEPTxCount(ENDP1, usb_tx_end);
 	SetEPTxValid(ENDP1); 
+	usb_tx_end = 0;
 }
 
 /* call from isr */

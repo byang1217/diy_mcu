@@ -107,7 +107,7 @@ unsigned long bsp_get_uptime_us(void);
 unsigned long bsp_get_uptime_ms(void);
 
 void bsp_init(void);
-uint64_t bsp_get_devid(void);
+char *bsp_get_sn(void);
 
 void bsp_uart_init(int id, int rate);
 void bsp_uart_putc(int id, char c);

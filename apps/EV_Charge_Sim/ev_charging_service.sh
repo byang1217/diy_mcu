@@ -8,7 +8,7 @@ while true; do
                 sleep 0.1
                 echo id > /dev/ttyACM0
                 stty -F /dev/ttyACM0 -icanon
-                id=`timeout 3 dd if=/dev/ttyACM0 bs=8 count=1 2>/dev/null`
+                id=`timeout 3 dd if=/dev/ttyACM0 bs=24 count=1 2>/dev/null`
                 echo "id: $id"
                 while test -e /dev/ttyACM0; do
                         sleep 0.1
